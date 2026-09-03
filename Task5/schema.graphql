@@ -1,0 +1,74 @@
+"""
+GraphQL схема сервиса управления клиентскими данными (client-info).
+Эквивалентна REST API:
+- GET /clients/{id}
+- GET /clients/{id}/documents
+- GET /clients/{id}/relatives
+"""
+schema {
+  query: Query
+}
+
+type Query {
+  """
+  Получить информацию о клиенте по ID.
+  Аналог GET /clients/{id}.
+  """
+  client(id: ID!): Client
+
+  """
+  Список документов клиента по ID.
+  Аналог GET /clients/{id}/documents.
+  """
+  clientDocuments(clientId: ID!): [Document!]!
+
+  """
+  Список родственников клиента по ID.
+  Аналог GET /clients/{id}/relatives.
+  """
+  clientRelatives(clientId: ID!): [Relative!]!
+}
+
+"""
+Клиент. Базовые поля приведены по Swagger, в реальной системе их может быть до 500.
+"""
+type Client {
+  id: ID!
+  name: String
+  age: Int
+
+  """
+  Документы клиента.
+  Позволяет получить список документов в составе того же запроса, что и клиент.
+  Аналог /clients/{id}/documents.
+  """
+  documents: [Document!]!
+
+  """
+  Родственники клиента.
+  Позволяет получить список родственников в составе того же запроса, что и клиент.
+  Аналог /clients/{id}/relatives.
+  """
+  relatives: [Relative!]!
+}
+
+"""
+Документ клиента.
+"""
+type Document {
+  id: ID!
+  type: String
+  number: String
+  issueDate: String
+  expiryDate: String
+}
+
+"""
+Родственник клиента.
+"""
+type Relative {
+  id: ID!
+  relationType: String
+  name: String
+  age: Int
+}
